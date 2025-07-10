@@ -12,6 +12,8 @@ const connectDB =async ()=>{
         conn.on('error',(err)=>{
             console.log("mongoDB connection error. please make sure that mongoDB is running. "+ err)
         })
+        process.exit(1)
+        
     } catch (error) {
         console.log('something went wrong', error)
     }
