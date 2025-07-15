@@ -1,45 +1,55 @@
-import connectDB from "@/dbConfig/dbConfig";
-import {User} from "@/models/userModel";
+import { connectDB } from "@/dbConfig/dbConfig";
+import { User } from "@/models/userModel";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
-connectDB()
 
+connectDB();
 
-export async function POST(request:NextRequest) {
-    try {
+export async function POST(request: NextRequest) {
+  try {
+    const reqBody = await request.json();
+    const { username, email, password } = reqBody;
 
-        const reqBody = await request.json()
+    if (!username || !email || !password) {
+      return NextResponse.json(
+        { message: "All fields are required" },
+        { status: 400 }
+      );
+    }
 
-        const {username, email, password} = reqBody
+    const existUser = await User.findOne({ email });
 
-        if(!username || !email  || !password){
-            return NextResponse.json({message:"all fields are required"},{status:400})
-        }
+    if (existUser) {
+      return NextResponse.json(
+        { message: "User already exists" },
+        { status: 400 }
+      );
+    }
 
-        const existUser = await User.findOne(email)
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        if(existUser){
-            return NextResponse.json({message:"user already exist"},{status:400})
-        }
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
 
-        const hashPassword =await bcrypt.hash(password,10)
+    const savedUser = await user.save();
 
-        const user = new User({
-            username,
-            email,
-            password:hashPassword
-        })
-
-        const savedUser = await user.save()
-
-        return NextResponse.json({
-            message:"user registered successfully",
-            status:201,
-            savedUser
-        })
-        
-    } catch (error:any) {
-        return NextResponse.json({error:error.message},{status:500})
-    }   
+    return NextResponse.json(
+      {
+        message: "User registered successfully",
+        user: {
+          id: savedUser._id,
+          username: savedUser.username,
+          email: savedUser.email,
+        },
+      },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    console.error("Signup error:", error);
+    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+}
 }

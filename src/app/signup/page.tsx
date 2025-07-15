@@ -1,8 +1,9 @@
 "use client"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import Link from "next/link"
+import toast from "react-hot-toast"
 
 const signupPage = () => {
     const [user, setUser] = useState({
@@ -11,12 +12,42 @@ const signupPage = () => {
         password: ""
     })
 
+    const router = useRouter()
+
+    const [buttonDisabled, setButtonDisabled] = useState(true)
+
+    useEffect(() => {
+        if(user.username.length > 0 && user.email.length > 0 && user.password.length > 0){
+            setButtonDisabled(false)
+        }else{
+            setButtonDisabled(true)
+        }
+    }, [user])
+
+    const [loading, setLoading] = useState(false)
+    
+
     const onSignup = async () => {
+        try {
+            setLoading(true)
+
+            const response = await axios.post('/api/users/signup', user)
+            console.log('signup success', response.data)
+            toast.success("Signup success")
+            router.push("/login")
+
+        } catch (error:any) {
+            console.log("signup failed", error.message)
+            toast.error(error.response?.data?.message || "Signup failed")
+
+        }finally{
+            setLoading(false)
+        }
     }
 
     return (
         <div className="h-screen w-full md:w-1/2 bg-gray-800 flex flex-col items-center justify-center mx-auto px-4">
-            <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
+            <h2 className="text-2xl font-bold text-center mb-6">{loading ? "Creating Account..." : "Create an Account"}</h2>
 
             <label htmlFor="username">Username:</label>
             <input
@@ -52,7 +83,7 @@ const signupPage = () => {
                 onClick={onSignup}
                 className="px-4 py-2 rounded text-lg border m-2 bg-blue-500 text-white hover:bg-blue-600 transition"
             >
-                Signup
+                {buttonDisabled ? "No Signup" : "Signup"}
             </button>
 
             <Link className="text-sm mt-2 text-blue-400" href="/login">
