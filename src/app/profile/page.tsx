@@ -1,26 +1,41 @@
 "use client"
 
 import axios from "axios"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 import toast from "react-hot-toast"
 
 const ProfilePage = () => {
 
+    const [data, setData] = useState("nothing")
+
     const router = useRouter()
-    const logout= async()=>{
+    const getUserData = async () => {
+        try {
+            const res = await axios.get('/api/users/me')
+            setData(res.data.data._id)
+        } catch (error: any) {
+            toast.error(error.message || "failed to get data")
+        }
+    }
+    const logout = async () => {
         try {
             await axios.get('/api/users/logout')
             toast.success("logout successfully")
             router.push('/login')
-        } catch (error:any) {
+        } catch (error: any) {
             toast.error(error.message || "failed to logout")
         }
     }
     return (
         <div className="h-screen w-full md:w-1/2 bg-gray-800 flex flex-col items-center justify-center mx-auto px-4">
             <h2 className="text-2xl font-bold text-center mb-6 text-white">Profile</h2>
+            <h2 className="text-white text-2xl p-2 m-3 rounded-2xl bg-purple-900">{data === "nothing" ? "Nothing" : <Link href={`/profile/${data}`}>{data}</Link>}</h2>
             <p className="text-white">This is your profile page. </p>
             <button onClick={logout} className="mt-5 px-4 py-2 rounded-4xl outline border-2 border-cyan-950 bg-red-600 text-blue-300 shadow-2xl hover:opacity-70 cursor-pointer">Logout</button>
+
+            <button onClick={getUserData} className="mt-5 px-4 py-2 rounded-4xl outline border-2 border-yellow-950 bg-purple-700 text-blue-300 shadow-2xl hover:opacity-70 cursor-pointer">get data</button>
         </div>
     )
 }
