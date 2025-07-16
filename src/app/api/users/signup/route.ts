@@ -1,4 +1,5 @@
 import { connectDB } from "@/dbConfig/dbConfig";
+import { sendEmail } from "@/helpers/mailer";
 import { User } from "@/models/userModel";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
@@ -37,6 +38,8 @@ export async function POST(request: NextRequest) {
 
     const savedUser = await user.save();
 
+    await sendEmail({ email, emailType: "VERIFY", userId: savedUser._id })
+
     return NextResponse.json(
       {
         message: "User registered successfully",
@@ -51,5 +54,5 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error("Signup error:", error);
     return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
-}
+  }
 }
