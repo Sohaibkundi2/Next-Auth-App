@@ -69,6 +69,10 @@ const LoginPage = () => {
             onChange={(e) => setUser({ ...user, password: e.target.value })}
           />
         </div>
+        <Link href="/forgot-password" className="text-sm mt-2 text-blue-400">
+  Forgot password?
+</Link>
+
 
         <button
           onClick={onLogin}
