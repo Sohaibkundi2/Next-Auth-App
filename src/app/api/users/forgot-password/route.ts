@@ -1,12 +1,11 @@
+import { connectDB } from "@/dbConfig/dbConfig";
 import { User } from "@/models/userModel";
 import { sendEmail } from "@/helpers/mailer";
 import { NextResponse } from "next/server";
-import { connectDB } from "@/dbConfig/dbConfig";
 
 connectDB();
 
 export async function POST(request: Request) {
-
   try {
     const { email } = await request.json();
 
@@ -15,7 +14,6 @@ export async function POST(request: Request) {
     }
 
     const user = await User.findOne({ email });
-
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
@@ -26,12 +24,8 @@ export async function POST(request: Request) {
       userId: user._id,
     });
 
-    return NextResponse.json({
-      message: "Password reset email sent",
-    });
+    return NextResponse.json({ message: "Reset email sent" });
   } catch (error: any) {
-    return NextResponse.json({
-      message: error.message || "Something went wrong",
-    }, { status: 500 });
+    return NextResponse.json({ message: error.message || "Server error" }, { status: 500 });
   }
 }

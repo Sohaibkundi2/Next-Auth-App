@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
@@ -26,10 +27,12 @@ export default function ResetPasswordPage() {
       });
 
       setMessage(res.data.message);
+      toast.success("Password reset successful!");
     } catch (error: any) {
       setMessage(
         error.response?.data?.message || "Something went wrong. Try again."
       );
+      toast.error(error.response?.data?.message || "Something went wrong. Try again.");
     } finally {
       setLoading(false);
     }

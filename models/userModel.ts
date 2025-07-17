@@ -23,8 +23,8 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
-    forgetPasswordToken: String,
-    forgetPasswordTokenExpiry: Date,
+    forgotPasswordToken: String,
+    forgotPasswordTokenExpiry: Date,
     verifyToken: String,
     verifyTokenExpiry: Date
 

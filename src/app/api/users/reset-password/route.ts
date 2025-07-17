@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import bcrypt from "bcrypt";
 import { connectDB } from "@/dbConfig/dbConfig";
 import { User } from "@/models/userModel";
+import bcrypt from "bcrypt";
+import { NextResponse } from "next/server";
 
 connectDB();
 
@@ -11,14 +11,14 @@ export async function POST(request: Request) {
 
     if (!token || !newPassword) {
       return NextResponse.json(
-        { message: "Missing token or password" },
+        { message: "Token and new password are required" },
         { status: 400 }
       );
     }
 
-    // Find user with this token
+    // 1. Find user with non-expired forgotPasswordToken
     const user = await User.findOne({
-      forgotPasswordToken: token,
+      forgotPasswordToken: { $ne: null },
       forgotPasswordTokenExpiry: { $gt: Date.now() },
     });
 
@@ -29,23 +29,30 @@ export async function POST(request: Request) {
       );
     }
 
-    // Hash new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // 2. Compare plain token with hashed token
+    const isTokenValid = await bcrypt.compare(token, user.forgotPasswordToken);
 
-    // Update user
+    if (!isTokenValid) {
+      return NextResponse.json(
+        { message: "Invalid or expired token" },
+        { status: 400 }
+      );
+    }
+
+    // 3. Hash new password and save
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
-    user.forgotPasswordToken = undefined;
-    user.forgotPasswordTokenExpiry = undefined;
+
+    // 4. Clear the reset token and expiry
+    user.forgotPasswordToken = null;
+    user.forgotPasswordTokenExpiry = null;
 
     await user.save();
 
-    return NextResponse.json({
-      message: "Password has been reset successfully",
-    });
-  } catch (error) {
-    console.error("Error resetting password:", error);
+    return NextResponse.json({ message: "Password reset successfully" });
+  } catch (error: any) {
     return NextResponse.json(
-      { message: "Server error while resetting password" },
+      { message: error.message || "Something went wrong" },
       { status: 500 }
     );
   }
