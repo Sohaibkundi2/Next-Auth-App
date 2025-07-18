@@ -1,6 +1,6 @@
 # Next.js Auth App (TypeScript)
 
-<!-- [![Deployment](https://img.shields.io/badge/deployed-live-green)](https://next-auth-app.vercel.app) -->
+[![Deployment](https://img.shields.io/badge/deployed-live-green)](https://next-auth-app-nine-vert.vercel.app/)
 
 A full-featured authentication system built with **Next.js 13+ App Router**, **TypeScript**, **Axios**, and **Tailwind CSS**. Includes signup, login, email verification, forgot passwoed and profile handling.
 
@@ -27,7 +27,7 @@ A full-featured authentication system built with **Next.js 13+ App Router**, **T
 - HTTP Client: Axios
 - Notifications: react-hot-toast
 - Backend APIs: Node.js 
-- Email: mailtrap
+- Email service: Mailtrap (Testing)
 - Database: MongoDB 
 
 ---
@@ -41,13 +41,19 @@ src/
 │   ├── signup/page.tsx
 │   ├── profile/page.tsx
 │   ├── profile/[id]/page.tsx
-│   └── verifyemail/page.tsx
+│   ├── verifyemail/page.tsx
+│   ├── forgotpassword/page.tsx
+│   ├── resetpassword/
+│   │    ├── page.tsx 
+│   │    └── ResetPasswordForm.tsx 
 │   └── api/
 │       └── users/
 │           ├── signup/route.ts
 │           ├── login/route.ts
 │           ├── logout/route.ts
 │           └── verifyemail/route.ts
+│           ├── forgotpassword/route.ts
+│           └── resetpassword/route.ts
 ├── public/
 ├── styles/
 ├── utils/
@@ -61,8 +67,8 @@ src/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/sohaibkundi2/next-auth-app.git
-cd next-auth-app
+git clone https://github.com/Sohaibkundi2/Next-Auth-App.git
+cd Next-Auth-App
 ```
 
 ### 2. Install Dependencies
@@ -81,6 +87,9 @@ Create a `.env.local` file in the root with the following variables:
 MONGODB_URI=your_mongo_connection
 JWT_SECRET=your_jwt_secret
 DOMAIN=http://localhost:3000
+
+MAILTRAP_USER= your_mailtrap_user_name
+MAILTRAP_PASS= your_mailtrap_password
 ```
 
 ### 4. Run the Development Server
@@ -101,20 +110,23 @@ Visit [http://localhost:3000](http://localhost:3000)
 | POST   | `/api/users/login`     | Login user              |
 | GET    | `/api/users/logout`    | Logout session          |
 | POST   | `/api/users/verifyemail` | Email verification     |
+| POST   | `/api/users/forget-password`  | Send reset password email   |
+| POST   | `/api/users/reset-password`   | Reset password using token      |
 
 ---
 
 ## Deployment
 
-<!-- The project is deployed on **Vercel**:  
-[https://next-auth-app.vercel.app](https://next-auth-app.vercel.app) -->
+The project is deployed on **Vercel**:  
+[view live](https://next-auth-app-nine-vert.vercel.app/)
 
 
 
 ## Author
 
-```
-Made by Sohaib Kundi
-```
+**Sohaib Khan**  
+Full-Stack Developer
 
+- [ GitHub](https://github.com/Sohaibkundi2)
+- [ LinkedIn](https://www.linkedin.com/in/sohaibkundi2)
 ---
