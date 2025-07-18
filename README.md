@@ -35,28 +35,33 @@ A full-featured authentication system built with **Next.js 13+ App Router**, **T
 ## Directory Structure
 
 ```
-src/
-├── app/
-│   ├── login/page.tsx
-│   ├── signup/page.tsx
-│   ├── profile/page.tsx
-│   ├── profile/[id]/page.tsx
-│   ├── verifyemail/page.tsx
-│   ├── forgotpassword/page.tsx
-│   ├── resetpassword/
-│   │    ├── page.tsx 
-│   │    └── ResetPasswordForm.tsx 
-│   └── api/
-│       └── users/
-│           ├── signup/route.ts
-│           ├── login/route.ts
-│           ├── logout/route.ts
-│           └── verifyemail/route.ts
-│           ├── forgotpassword/route.ts
-│           └── resetpassword/route.ts
-├── public/
-├── styles/
-├── utils/
+├──src/
+    ├── middleware.ts
+    ├── app/
+    │   ├── layout.tsx
+    │   ├── ...
+    │   ├── login/page.tsx
+    │   ├── signup/page.tsx
+    │   ├── profile/page.tsx
+    │   ├── profile/[id]/page.tsx
+    │   ├── verifyemail/page.tsx
+    │   ├── forgotpassword/page.tsx
+    │   ├── resetpassword/
+    │   │    ├── page.tsx 
+    │   │    └── ResetPasswordForm.tsx 
+    │   └── api/
+    │       └── users/
+    │           ├── signup/route.ts
+    │           ├── login/route.ts
+    │           ├── logout/route.ts
+    │           └── verifyemail/route.ts
+    │           ├── forgotpassword/route.ts
+    │           └── resetpassword/route.ts
+├── helpers/
+├── dbConfig/
+├── models/
+├── public
+├── env
 └── ...
 ```
 
